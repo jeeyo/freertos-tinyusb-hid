@@ -3,8 +3,6 @@ cmake_minimum_required(VERSION 3.5)
 # build configuration
 option(DEBUG "Debug mode" OFF)
 
-project(freertos-tinyusb-hid C CXX ASM)
-
 set(FREERTOS_DIR ./3rdparty/FreeRTOS)
 set(PICO_SDK_PATH ./3rdparty/pico-sdk)
 
@@ -12,10 +10,13 @@ set(PICO_BOARD pico2)
 
 include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
 
+project(freertos-tinyusb-hid C CXX ASM)
+
 set(SOURCES )
 set(LIBS )
 
 list(APPEND SOURCES
+  ./src/usb_descriptors.c
   ./src/hooks.c
   ${FREERTOS_DIR}/croutine.c
   ${FREERTOS_DIR}/event_groups.c
@@ -49,6 +50,7 @@ list(APPEND LIBS
   pico_stdio_semihosting
   pico_multicore
   hardware_exception
+  pico_unique_id
   tinyusb_device
 )
 
@@ -58,4 +60,5 @@ pico_enable_stdio_usb(freertos-tinyusb-hid 0)
 pico_enable_stdio_uart(freertos-tinyusb-hid 0)
 pico_enable_stdio_semihosting(freertos-tinyusb-hid 1)
 
+# create map/bin/hex file etc.
 pico_add_extra_outputs(freertos-tinyusb-hid)
